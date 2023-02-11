@@ -80,6 +80,9 @@ class UserApp(AbstractUser):
     def user_directory_path(self, filename):
         return 'user_{0}/{1}'.format(self.id, filename)
 
+    def user_directory_path_for_cover(self, filename):
+        return 'user_{0}/cover/{1}'.format(self.id, filename)
+
     email = models.EmailField(
         max_length=150,
         unique=True,
@@ -89,6 +92,12 @@ class UserApp(AbstractUser):
     photo = models.ImageField(
         _("photo"),
         upload_to=user_directory_path,
+        blank=True,
+        null=True,
+    )
+    photo_cover = models.ImageField(
+        _("photo_cover"),
+        upload_to=user_directory_path_for_cover,
         blank=True,
         null=True,
     )
