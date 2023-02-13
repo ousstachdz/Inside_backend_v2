@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserApp
+from .models import UserApp, UserInformations
 
 admin.site.register(UserApp)
-# Register your models here.
+admin.site.register(UserInformations)

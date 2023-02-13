@@ -12,7 +12,8 @@ class UserAppManager(BaseUserManager):
 
     def _create_user(self, username, email, password, **extra_fields):
         """
-        Create and save a user with the given username, email, and password.
+        Create and save a user with the given email, and password.
+        username and the email are the same until the user change it. 
         """
         username = email
         if not username:
@@ -104,22 +105,68 @@ class UserApp(AbstractUser):
     username = models.CharField(
         _("username"),
         max_length=150,
-        unique=False,
+        unique=True,
         blank=True,
         null=True,
         help_text=_(
-            "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+            "150 characters or fewer. Letters, digits and @/./+/-/_ only."
         ),
         error_messages={
             "unique": _("A user with that username already exists."),
         },
     )
 
+    bio = models.TextField(
+        _("bio"),
+        blank=True,
+        null=True,
+    )
+
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    more_info = models.ForeignKey("user.UserInformations", verbose_name=_(
+        "more_info"), null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.email
 
     objects = UserAppManager()
+
+
+class UserInformations(models.Model):
+    NOT_DEFINE = 'NDF'
+
+    MALE = 'ML'
+    FEMALE = 'FML'
+
+    SINGLE = 'SNG'
+    IN_RELATION = 'INR'
+    MARRIED = 'MRD'
+    DIVORCED = 'DVR'
+    COHABITING = 'CBT'
+
+    GANDER_CHOISES = [
+        (NOT_DEFINE, 'not define'),
+        (MALE, 'male'),
+        (FEMALE, 'female'),
+    ]
+
+    MARITAL_CHOISES = [
+
+        (NOT_DEFINE, 'not define'),
+        (SINGLE, 'single'),
+        (IN_RELATION, 'in relation'),
+        (MARRIED, 'married'),
+        (DIVORCED, 'devorced'),
+        (COHABITING, 'cohabiting'),
+    ]
+
+    gander = models.CharField(
+        _("gander"), choices=GANDER_CHOISES, max_length=3, default=NOT_DEFINE)
+
+    birth_date = models.DateField(_("birth_date"), blank=True, null=True)
+
+    marital_state = models.CharField(
+        _("marital_state"), choices=MARITAL_CHOISES, max_length=3, default=NOT_DEFINE)
