@@ -8,3 +8,6 @@ class RequestFriendShip(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     is_accepted = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f'From {self.from_user} to {self.to_user}'
